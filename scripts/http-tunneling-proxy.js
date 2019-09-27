@@ -12,14 +12,19 @@ const server = http.createServer();
 server.on( 'connect', ( req, cltSock, head ) => {
   const [ host, port ] = req.url.split(':');
 
+  console.log( `Received CONNECT request for ${ host }:${ port }` );
+
   cltSock.on( 'error', err => {
     console.error( 'Client socket: ' + err.message );
   });
 
   const srvSock = net.connect( port, host, () => {
     console.log( `Connected to ${ host }:${ port }` );
+
     cltSock.write('HTTP/1.1 200 Connection Established\r\n\r\n');
     srvSock.write( head );
+
+    console.log( `Piping client connection to ${ host }:${ port }` );
 
     srvSock
     .once( 'close', () => cltSock.end() )

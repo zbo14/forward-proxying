@@ -41,6 +41,8 @@ server.on( 'request', async( req1, resp1 ) => {
       throw new Error('Expected forwarded host');
     }
 
+    console.log( `Sending ${ req1.method } request to ${ proto }://${ host }` );
+
     const opts = { host, method: req1.method, headers: { ...headers, host } };
 
     const { request } = proto === 'https' ? https : http;
@@ -66,6 +68,8 @@ server.on( 'request', async( req1, resp1 ) => {
   } catch ({ message }) {
     result = { statusCode: 500, body: message };
   }
+
+  console.log( `Received response from ${ proto }://${ host }` );
 
   Object
   .entries( result.headers || {} )
