@@ -9,6 +9,7 @@
 ## Why use a forward proxy?
 
 * Obscure ultimate destination of web traffic
+* Block outbound access to certain websites
 * Circumvent restrictive firewall rules that prevent outbound traffic to certain websites
 * Encrypt traffic when visiting HTTP sites on untrusted network (e.g. using SOCKS proxy that tunnels traffic over SSH)
 * Modify requests from your browser on the fly
