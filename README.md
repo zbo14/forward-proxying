@@ -1,13 +1,12 @@
 # Forward proxying
+This is the repo for a presentation I did on forward proxies!
 
 ## What is a forward proxy?
-
 * Think of it as a two-way detour for network traffic originating from/coming back to a client
 * Proxy receives octets from the client and sends octets to a destination host specified by the client
 * Proxy receives octets from the destination host and forwards them to the client
 
 ## Why use a forward proxy?
-
 * Obscure ultimate destination of web traffic
 * Block outbound access to certain websites
 * Circumvent restrictive firewall rules that prevent outbound traffic to certain websites
@@ -17,26 +16,21 @@
 ## Types of forward proxies
 
 ### HTTP proxy
-
 The following overview reflects the naive implementation in `/scripts/http-proxy.js`.
 
 #### Overview
-
 1. Client crafts HTTP request and specifies destination host in [`Forwarded`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded) or [`X-Forwarded-Host`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host) headers
 1. Proxy receives HTTP request from client and sends nearly-identical HTTP/S request to destination host
 1. Proxy receives HTTP/S response from destination host and forwards it to client
 
 #### Pros
-
 * Is HTTP aware; doesn't require tunneling a transport layer protocol through an application level protocol
 
 #### Cons
-
 * Doesn't appear to be well-supported in browsers or system settings
 * All HTTP requests from client aren't encrypted
 
 ### HTTPS proxy
-
 A good example is [mitmproxy](https://mitmproxy.org/).
 
 #### Overview
@@ -53,22 +47,18 @@ A good example is [mitmproxy](https://mitmproxy.org/).
 * Proxy has to do a lot of work generating certs on-demand
 
 ### HTTP tunneling proxy
-
 Refer to implementation in `/scripts/http-tunneling-proxy.js`.
 
 #### Overview
-
 1. Proxy receives an [HTTP `CONNECT` request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) from the client with destination hostname/port
 1. Proxy establishes a TCP connection to hostname/port and "pipes" it to the client socket from the HTTP `CONNECT` request
 1. Traffic then flows between the client and destination host through the "pipe"
 
 #### Pros
-
 * Sometimes supported where SOCKS isn't (e.g. check your iphone)
 * Tor can be used as an HTTP tunneling proxy
 
 #### Cons
-
 * More overhead than SOCKS
   * We're using an application level protocol (HTTP) to tunnel a transport layer protocol (TCP)
   * Each `CONNECT` request includes HTTP headers
@@ -78,7 +68,6 @@ Refer to implementation in `/scripts/http-tunneling-proxy.js`.
 ### SOCKS proxy
 
 #### Overview
-
 The [wiki page](https://en.wikipedia.org/wiki/SOCKS) has explanations of the different protocol versions.
 
 The following summary hand-waves some details, e.g. how the SOCKS4 handshake involves a single exchange of messages while SOCKS5 requires multiple.
@@ -99,7 +88,6 @@ The following summary hand-waves some details, e.g. how the SOCKS4 handshake inv
 3. If the handshake is successful, subsequent octets received on the client socket will be sent to the destination host (and vice-versa)
 
 #### Pros
-
 * SOCKS5 supports UDP port association so we can proxy DNS requests
 * Tor can be used as a SOCKS proxy
 * `OpenSSH` supports dynamic port forwarding and can act as a SOCKS proxy
@@ -112,7 +100,6 @@ ssh -Nv -D 127.0.0.1:12345 -i $KEY $USER@$HOST
 ```
 
 #### Cons
-
 * Some applications/devices don't support SOCKS proxies
 * Traffic from client to SOCKS proxy isn't encrypted
 
